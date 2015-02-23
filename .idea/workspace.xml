@@ -65,10 +65,10 @@
       <file leaf-file-name="Chatroom.rb" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Chatroom.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-0.38267148" vertical-offset="3646" max-vertical-offset="4539">
-              <caret line="227" column="32" selection-start-line="227" selection-start-column="32" selection-end-line="227" selection-end-column="32" />
+            <state vertical-scroll-proportion="0.9368231" vertical-offset="1691" max-vertical-offset="4539">
+              <caret line="130" column="43" selection-start-line="130" selection-start-column="43" selection-end-line="130" selection-end-column="43" />
               <folding>
-                <element signature="e#3374#3966#0" expanded="false" />
+                <element signature="e#3371#3963#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -423,10 +423,10 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Chatroom.rb">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-0.38267148" vertical-offset="3646" max-vertical-offset="4539">
-          <caret line="227" column="32" selection-start-line="227" selection-start-column="32" selection-end-line="227" selection-end-column="32" />
+        <state vertical-scroll-proportion="0.9368231" vertical-offset="1691" max-vertical-offset="4539">
+          <caret line="130" column="43" selection-start-line="130" selection-start-column="43" selection-end-line="130" selection-end-column="43" />
           <folding>
-            <element signature="e#3374#3966#0" expanded="false" />
+            <element signature="e#3371#3963#0" expanded="false" />
           </folding>
         </state>
       </provider>

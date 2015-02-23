@@ -95,7 +95,6 @@ class Pool
     sleep rand(i)                 # simulating different work loads
     @message = client.gets.chomp
     puts "#{@message}"
-    puts 'worker'
 
     case @message
       when /HELO .*\n/
@@ -128,6 +127,7 @@ class Pool
   def join_cr(client, msg)
 
     @room = msg[/JOIN_CHATROOM:(.*)\n/,1]
+    puts @room
     @nickname = msg[/CLIENT_NAME:(.*)\n/,1]
 
     if !@@rooms[@room]
