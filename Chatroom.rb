@@ -97,18 +97,18 @@ class Pool
     puts "#{@message}"
     puts 'worker'
 
-    case
-      when @message.split[0] == 'HELO'
+    case @message
+      when /HELO .*\n/
         helo(client, @message)
-      when @message.split[0] == 'JOIN_CHATROOM:'
+      when /JOIN_CHATROOM:.*\n/
         join_cr(client, @message)
-      when @message.split[0] == 'CHAT:'
+      when /CHAT:.*\n/
         chat(client, @message)
-      when @message.split[0] == 'LEAVE_CHATROOM:'
+      when /LEAVE_CHATROOM:.*\n/
         leave_cr(client, @message)
-      when @message.split[0] == 'DISCONNECT:'
+      when /DISCONNECT:.*\n/
         disconnect(client, @message)
-      when @message == 'KILL_SERVICE\n'
+      when /KILL_SERVICE.*\n/
         kill_server
       else
         unknown(client, @message)
@@ -127,9 +127,8 @@ class Pool
 
   def join_cr(client, msg)
 
-    @msg = msg.split('\n')
-    @room = @msg[0].split(' ')[1]
-    @nickname = @msg[3].split(' ')[1]
+    @room = msg[/JOIN_CHATROOM:(.*)\n/,1]
+    @nickname = msg[/CLIENT_NAME:(.*)\n/,1]
 
     if !@@rooms[@room]
       @roomID = @@roomNum += 1
@@ -150,7 +149,7 @@ class Pool
     @reply = 'JOINED_CHATROOM: '
     @reply += "#{@room}"
     @reply += '\nSERVER_IP: '
-    @reply += "#{@ipAddr}"
+    @reply += 'lg12l15.scss.tcd.ie' #{@ipAddr}
     @reply += '\nPort: '
     @reply += "#{@port}"
     @reply += '\nROOM_REF: '
@@ -168,21 +167,21 @@ class Pool
       @message = client.gets.chomp
       puts "#{@message}"
 
-      if @message.split[0] == 'DISCONNECT:'
-        disconnect(client, @message)
+      if @message[/DISCONNECT:.*\n/]
+      disconnect(client, @message)
         break
       end
 
-      case
-        when @message.split[0] == 'HELO'
+      case @message
+        when /HELO .*\n/
           helo(client, @message)
-        when @message.split[0] == 'JOIN_CHATROOM:'
+        when /JOIN_CHATROOM:.*\n/
           join_cr(client, @message)
-        when @message.split[0] == 'CHAT:'
+        when /CHAT:.*\n/
           chat(client, @message)
-        when @message.split[0] == 'LEAVE_CHATROOM:'
+        when /LEAVE_CHATROOM:.*\n/
           leave_cr(client, @message)
-        when @message == 'KILL_SERVICE\n'
+        when /KILL_SERVICE.*\n/
           kill_server
         else
           unknown(client, @message)
@@ -191,10 +190,9 @@ class Pool
   end
 
   def chat(client, msg)
-    @msg = msg.split('\n')
-    @c_room = @msg[0].split(' ')[1].to_i
-    @clientID = @msg[1].split(' ')[1]
-    @nickname = @msg[2].split(' ')[1]
+    @c_room = msg[/CHAT:(.*)\n/,1].to_i
+    @clientID = msg[/JOIN_ID:(.*)\n/,1]
+    @nickname = msg[/CLIENT_NAME:(.*)\n/,1]
 
     @checker = @@c_rooms[@c_room].check_members(@nickname)
 
@@ -203,9 +201,7 @@ class Pool
     if @checker == 0
       client.puts('ERROR_CODE: 101\nERROR_DESCRIPTION: You have not joined this chatroom')
     else
-      @chat_msg = Array.new
-      @chat_msg = @msg[3..-1]
-      @chat_msg[0] = @msg[3].split(' ')[1..-1].join(' ')
+      @chat_msg = msg[/MESSAGE:(.*)\n\n/,1]
 
       @@c_rooms[@c_room].broadcast(@c_room, @nickname, @chat_msg)
      end
@@ -213,10 +209,10 @@ class Pool
   end
 
   def leave_cr(client, msg)
-    @msg = msg.split('\n')
-    @c_room = @msg[0].split(' ')[1].to_i
-    @clientID = @msg[1].split(' ')[1]
-    @nickname = @msg[2].split(' ')[1]
+
+    @c_room = msg[/LEAVE_CHATROOM:(.*)\n/,1]
+    @clientID = msg[/JOIN_ID:(.*)\n/,1]
+    @nickname = msg[/CLIENT_NAME:(.*)\n/,1]
 
     @@c_rooms[@c_room].leave(@nickname)
 
@@ -229,8 +225,7 @@ class Pool
   end
 
   def disconnect(client, msg)
-    @msg = msg.split('\n')
-    @nickname = @msg[2].split(' ')[1]
+    @nickname = msg[/CLIENT_NAME:(.*)\n/,1]
     @checker = 0
     @@c_rooms.each_value do |cr|
       if cr
